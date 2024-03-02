@@ -1,0 +1,175 @@
+syntax = "proto3";
+
+// Login Request
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+// Login Response
+message LoginResponse {
+  int64 userId = 1;
+  string token = 2;
+}
+
+// Message for a single item within a scene
+message SceneItem {
+  int64 itemId = 1;
+  int32 positionX = 3;
+  int32 positionY = 4;
+  int64 pileItemId = 5; // Indicate whether there is an item pile; 0 -> no pile
+}
+
+// Item in user's inventory
+message InventoryItem {
+  int64 itemId = 1;
+  int32 amount = 2;
+}
+
+// Message for a character
+message Character {
+  int64 characterId = 1;
+  int64 sceneId = 2;
+}
+
+// User
+message UserInfo {
+  int64 userId = 1;
+  int32 money = 2;
+}
+
+
+// Common text message
+message CommonMsg{
+  int64 messageId = 1;
+  string messageContent = 2;
+}
+
+// Request for getting all items from a user's inventory in a given scene
+message GetInventoryRequest {
+  int64 userId = 1;
+}
+
+// Response for getting all items from a user's inventory, return a list of items with their position
+message GetInventoryResponse {
+  int64 userId = 1;
+  repeated InventoryItem item = 2;
+}
+
+// Request for getting all items in a user's main scene;
+message GetMainSceneItemsRequest {
+  int64 userId = 1;
+}
+
+// Response for getting all items in a user's main scene;
+message GetMainSceneItemsResponse{
+  int64 userId = 1;
+  repeated SceneItem item = 2;
+}
+
+
+
+// Request for getting all characters in a given scene
+message GetCharacterRequest {
+  int64 userId = 1;
+  int64 sceneId = 2;
+}
+
+// Response for getting all characters,return a list of characters id and name
+message GetCharacterResponse {
+  int64 userId = 1;
+  int64 sceneId = 2;
+  repeated Character character = 3;
+}
+
+// Request for place, retrieve or change the place of an item
+message PlaceItemRequest {
+  int64 userId = 1;
+  int32 type = 2; // type = 0 -> place an item from inventory;
+                  // type = 1 -> retrieve item from a scene back to inventory
+                  // type = 2 -> change the place of an item within a scene
+  int64 itemId = 3;
+  int64 sceneId = 4;
+  int32 positionX = 5;
+  int32 positionY = 6;
+}
+
+// Return userId and indicate whether the request succeed
+message PlaceItemResponse {
+  int64 userId = 1;
+  int32 type = 2; // type = 0 -> place an item from inventory;
+                  // type = 1 -> retrieve item from a scene back to inventory
+                  // type = 2 -> change the place of an item within a scene
+  int64 itemId = 3;
+  int64 sceneId = 4;
+  int32 positionX = 5;
+  int32 positionY = 6;
+  int32 result = 7; // result = 0 -> placement request failed;
+                    // result = 1 -> placement request succeed;
+}
+
+// Request for purchasing items from shop, can buy multiple items at the same time
+message PurchaseItemRequest {
+  int64 userId = 1;
+  repeated int64 shopItemId = 2;
+  int32 amount = 3;
+}
+
+message PurchaseItemResponse {
+  int64 userId = 1;
+  repeated int64 shopItemId = 2;
+  int32 amount = 3;
+  int32 result = 4; // result = 0 -> purchase request failed;
+                    // result = 1 -> purchase request succeed;
+}
+
+// Request for placing an character
+message PlaceCharacterRequest {
+  int64 userId = 1;
+  int64 characterId = 2;
+  int64 sceneId = 3;
+  int32 type = 4; // type = 0 -> place an character from inventory;
+                  // type = 1 -> retrieve character from a scene back to inventory;
+}
+
+message PlaceCharacterResponse {
+  int64 userId = 1;
+  int64 characterId = 2;
+  int64 sceneId = 3;
+  int32 result = 4; // result = 0 -> placement request failed;
+                    // result = 1 -> placement request succeed;
+}
+
+message GMAddMoneyRequest {
+  int64 userId = 1;
+  int32 money = 2;
+}
+
+message GMAddMoneyResponse {
+  int64 userId = 1;
+  int32 money = 2;
+  int32 result = 3; // result = 0 -> request failed;
+                    // result = 1 -> request succeed;
+}
+
+message WrapperMessage {
+  int32 msgId = 1; //id = 11-> common message  12->login request  13->login response etc,
+
+  oneof payload {
+    CommonMsg commonMsg = 11;
+    LoginRequest loginRequest = 12;
+    LoginResponse loginResponse = 13;
+    GetInventoryRequest getInventoryReq = 14;
+    GetInventoryResponse getInventoryRes = 15;
+    GetMainSceneItemsRequest getMainSceneItemsReq = 16;
+    GetMainSceneItemsResponse getMainSceneItemsRes = 17;
+    GetCharacterRequest getCharacterReq = 18;
+    GetCharacterResponse getCharacterRes = 19;
+    PlaceItemRequest placeItemReq = 20;
+    PlaceItemResponse placeItemRes = 21;
+    PlaceCharacterRequest placeCharacterReq = 22;
+    PlaceCharacterResponse placeCharacterRes = 23;
+    GMAddMoneyRequest gMAddMoneyReq = 24;
+    GMAddMoneyResponse gMAddMoneyRes = 25;
+  }
+}
