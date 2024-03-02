@@ -26,7 +26,7 @@ public class SceneService {
                     .setItemId(item.getItemId())
                     .setPositionX(relation.getPositionX())
                     .setPositionY(relation.getPositionY())
-                    .setPileItemId(relation.getPiledItem().getItemId())
+                    .setPileItemId(relation.getPiledItem().getItem().getItemId())
                     .build();
             responseBuilder.addItem(sceneItem);
         });
