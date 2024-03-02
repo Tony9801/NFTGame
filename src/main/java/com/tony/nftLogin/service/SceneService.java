@@ -14,7 +14,7 @@ import java.util.List;
 public class SceneService {
     @Autowired
     SceneItemRelationRepository sceneItemRelationRepository;
-
+    // Get all main scene items for a user
     public Message.GetMainSceneItemsResponse getMainSceneItems(Long userId){
         List<SceneItemRelation> relations = sceneItemRelationRepository.findAllItemsInMainSceneByUserId(userId);
         Message.GetMainSceneItemsResponse.Builder responseBuilder = Message.GetMainSceneItemsResponse.newBuilder();
